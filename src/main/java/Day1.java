@@ -4,34 +4,32 @@ import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.util.List;
 
-public class Main {
-
-
+public class Day1 {
 
     public static void main(String[] args) {
         Solution s = new Solution();
-        int[] a = {2, 4, 5};
-        int[] b = {1, 4, 5};
-        ListNode s1 = null, l1 = null, s2 = null, l2 = null;
-        for (int i = 0; i < a.length; i++) {
-            if (i == 0){
-                s1 = l1 = new ListNode(a[i]);
-            }
-            else {
-                s1.next = new ListNode(a[i]);
-                s1 = s1.next;
-            }
-        }
-        for (int i = 0; i < b.length; i++) {
-            if (i == 0)
-            {
-                s2 = l2 = new ListNode(b[i]);
-            }
-            else {
-                s2.next = new ListNode(b[i]);
-                s2 = s2.next;
-            }
-        }
+//        int[] a = {2, 4, 5};
+//        int[] b = {1, 4, 5};
+//        ListNode s1 = null, l1 = null, s2 = null, l2 = null;
+//        for (int i = 0; i < a.length; i++) {
+//            if (i == 0){
+//                s1 = l1 = new ListNode(a[i]);
+//            }
+//            else {
+//                s1.next = new ListNode(a[i]);
+//                s1 = s1.next;
+//            }
+//        }
+//        for (int i = 0; i < b.length; i++) {
+//            if (i == 0)
+//            {
+//                s2 = l2 = new ListNode(b[i]);
+//            }
+//            else {
+//                s2.next = new ListNode(b[i]);
+//                s2 = s2.next;
+//            }
+//        }
 //        System.out.println(new Gson().toJson(l1));
 //        System.out.println(new Gson().toJson(l2));
 //        ListNode listNode = s.addTwoNumbers(l1, l2);
@@ -49,9 +47,9 @@ public class Main {
 //        boolean aab = s.isMatch("bbbba", ".*a*a");
 //        System.out.println(aab);
 //        System.out.println("ab".charAt(2));
-//        String convert = s.convert("Apalindromeisaword,phrase,number,orothersequenceofunitsthatcanbereadthesamewayineitherdirection,withgeneralallowancesforadjustmentstopunctuationandworddividers.", 4);
+//        String convert = s.convert("", 2);
 //        System.out.println(convert);
-        String ss = "  0000000000012345678";
+        String ss = "-31";
         int i = s.myAtoi(ss);
         System.out.println(i);
     }
@@ -167,13 +165,6 @@ class Solution {
             newNum[m++] = rightArr[j++];
         return newNum;
     }
-//    public static void main(String[] args) {
-//        int[] nums = new int[] { 9, 8, 7, 6, 5, 4, 3, 2, 10 };
-//        int[] newNums = mergeSort(nums, 0, nums.length - 1);
-//        for (int x : newNums) {
-//            System.out.println(x);
-//        }
-//    }
 
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
         int len = nums1.length + nums2.length;
@@ -374,6 +365,31 @@ class Solution {
     }
 
     public String convert(String s, int numRows) {
+        StringBuilder[] sb = new StringBuilder[numRows];
+        for (int i = 0; i < numRows; i++) {
+            sb[i] = new StringBuilder();
+        }
+        char[] chars = s.toCharArray();
+        int length = chars.length;
+        int index = 0;
+        while (index < length){
+            for (int i = 0; i < numRows; i++) {
+                if (index >= length) break;
+                sb[i].append(chars[index++]);
+            }
+            for (int j = numRows - 2; j > 0 ; j--){
+                if (index >= length) break;
+                sb[j].append(chars[index++]);
+            }
+        }
+        StringBuilder res = new StringBuilder();
+        for (int i = 0; i < numRows; i++) {
+            res.append(sb[i]);
+        }
+        return res.toString();
+    }
+
+    public String convert1(String s, int numRows) {
         int length = s.length();
         int row = length / numRows + 1;
         if (numRows > 2){
@@ -404,7 +420,61 @@ class Solution {
         return sb.toString();
     }
 
-    public int myAtoi(String str) {
+    public int myAtoi(String str){
+        char[] chars = str.toCharArray();
+        int length = chars.length;
+        long num = 0;
+        int state = 1, opr = 1;
+        boolean f = false;
+        for (int index = 0; index <= length; index++){
+            char ch = ' ';
+            if (index < length){
+                ch = chars[index];
+            }else {
+                state = 4;
+            }
+            switch (state){
+                case 1:
+                    if (ch == '+' || ch == '-'){
+                        opr = ch == '-' ? -1 : 1;
+                        state = 2;
+                    }else if (ch >= '0' && ch <= '9'){
+                        num = num * 10 + (ch - '0');
+                        state = 3;
+                    }else if (ch == ' '){
+                        state = 1;
+                    }else {
+                        state = 4;
+                    }
+                    break;
+                case 2:
+                case 3:
+                    if (ch >= '0' && ch <= '9'){
+                        num = num * 10 + (ch - '0');
+                        long tmp = num * opr;
+                        if (tmp > Integer.MAX_VALUE || tmp < Integer.MIN_VALUE){
+                            state = 4;
+                        }else {
+                            state = 3;
+                        }
+                    }else {
+                        state = 4;
+                    }
+                    break;
+                case 4:
+                    num = opr * num;
+                    if (num > Integer.MAX_VALUE) num = Integer.MAX_VALUE;
+                    if (num < Integer.MIN_VALUE) num = Integer.MIN_VALUE;
+                    f = true;
+                    break;
+            }
+            if (f) break;
+        }
+
+        return (int) num;
+    }
+
+    public int myAtoi1(String str) {
         if (str.length() <= 0) return 0;
         String replace = str.trim();
         if (replace.length() <= 0) return 0;
