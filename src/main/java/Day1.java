@@ -55,10 +55,10 @@ public class Day1 {
     }
 }
 
-class ListNode {
+class ListNode2 {
     int val;
     ListNode next;
-    ListNode(int x) { val = x; }
+    ListNode2(int x) { val = x; }
 }
 
 class Solution {
