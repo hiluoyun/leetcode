@@ -26,12 +26,16 @@ public class Day2 {
 //        System.out.println(new Gson().toJson(listNode1));
 //        boolean valid = s.isValid("{{([][])}}");
 //        System.out.println(valid);
-        List<List<Integer>> lists = s.fourSum(new int[]{-1, 0, 1, 2, -1, -4}, 2);
-        System.out.println(new Gson().toJson(lists));
+//        List<List<Integer>> lists = s.fourSum(new int[]{-1, 0, 1, 2, -1, -4}, 2);
+//        System.out.println(new Gson().toJson(lists));
 //        int i = Arrays.binarySearch(new int[]{0, 1, 2, 5 }, 3);
 //        System.out.println(i);
 //        int i = s.threeSumClosest(new int[]{1, 2, 5, 10, 11}, 12);
 //        System.out.println(i);
+//        int i = s.removeDuplicates(new int[]{1,1,2});
+//        System.out.println(i);
+        int divide = s.divide(-2147483648, -1);
+        System.out.println(divide);
     }
 }
 
@@ -329,6 +333,26 @@ class Solution2 {
             }
         }
         return result;
+    }
+
+    public int removeDuplicates(int[] nums) {
+        if (nums.length == 0) return 0;
+        int i = 0;
+        for (int j = 1; j < nums.length; j++) {
+            if (nums[i] < nums[j]){
+                i ++;
+                if (j - i >= 1) nums[i] = nums[j];
+            }
+        }
+        return i+1;
+    }
+
+    Long[] dp = new Long[100];
+
+    public int divide(int dividend, int divisor) {
+        long d1 = dividend, d2 = divisor;
+        long l = d1 / d2;
+        return l > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int)l;
     }
 
 }
