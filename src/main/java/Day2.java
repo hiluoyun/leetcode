@@ -351,15 +351,21 @@ class Solution2 {
 
     public int divide(int dividend, int divisor) {
         long d1 = dividend, d2 = divisor;
-        long l = d1 / d2;
-        return l > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int)l;
+        int opr = 1;
+        if ((d1 > 0 && d2 < 0) || (d1 < 0 && d2 > 0)) opr = -1;
+        d1 = Math.abs(d1); d2 = Math.abs(d2);
+        long res = 0;
+        for (int i = 31; i >= 0; i--) {
+            long t = d2 << i;
+            if (d1 >= t){
+                d1 -= t;
+                res += 1L<< i;
+            }
+        }
+        res = opr * res;
+        return res > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int)res;
     }
 
 }
 
 
-class ListNode {
-     int val;
-     ListNode next;
-     ListNode(int x) { val = x; }
-}
