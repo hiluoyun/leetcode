@@ -14,12 +14,60 @@ public class Day4 {
 //        int[] search = s.searchRange(new int[]{1,8,8, 8, 8,9}, 8);
 //        System.out.println(new Gson().toJson(search));
 
-        String s1 = s.countAndSay(5);
-        System.out.println(s1);
+//        String s1 = s.countAndSay(5);
+//        System.out.println(s1);
+        List<List<Integer>> lists = s.combinationSum2(new int[]{10,1,2,7,6,1,5}, 8);
+        System.out.println(new Gson().toJson(lists));
     }
 }
 
 class Solution4 {
+
+    Set<List<Integer>> resSet = null;
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<Integer> list = new ArrayList<>();
+        resSet = new HashSet<>();
+        fuc(candidates, target, 0, list, 0);
+        return new ArrayList<>(resSet);
+    }
+
+    private void fuc(int[] candidates, int target, int sum, List<Integer> list, int index){
+        if (sum > target) return;
+        if (sum == target) {
+            List<Integer> dst = new ArrayList<>(list);
+            Collections.sort(dst);
+            resSet.add(dst);
+            return;
+        }
+        for (int i = 0; i < candidates.length; i++) {
+            list.add(index, candidates[i]);
+            fuc(candidates, target, sum + candidates[i], list, index + 1);
+            list.remove(index);
+        }
+    }
+
+    Set<List<Integer>> resSet2 = null;
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        List<Integer> list = new ArrayList<>();
+        resSet2 = new HashSet<>();
+        fuc2(candidates, target, 0, list, 0, -1);
+        return new ArrayList<>(resSet2);
+    }
+
+    private void fuc2(int[] candidates, int target, int sum, List<Integer> list, int index, int cur){
+        if (sum > target) return;
+        if (sum == target) {
+            List<Integer> dst = new ArrayList<>(list);
+            Collections.sort(dst);
+            resSet2.add(dst);
+            return;
+        }
+        for (int i = cur + 1; i < candidates.length; i++) {
+            list.add(index, candidates[i]);
+            fuc2(candidates, target, sum + candidates[i], list, index + 1, i);
+            list.remove(index);
+        }
+    }
 
     private static Set<String> arrangeList = null;
     public List<Integer> findSubstring1(String s, String[] words) {
