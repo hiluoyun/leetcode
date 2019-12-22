@@ -1,8 +1,6 @@
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Day3 {
     public static void main(String[] args) {
@@ -15,7 +13,8 @@ public class Day3 {
         ListNode l2 = new ListNode(1);
         l2.next = new ListNode(3);
         l2.next.next = new ListNode(4);
-//        ListNode listNode = s.mergeKLists(new ListNode[]{l1, l2});
+        ListNode listNode = s.mergeKLists(new ListNode[]{l1, l2});
+        System.out.println(new Gson().toJson(listNode));
 //        ListNode listNode = s.swapPairs(l1);
 //        System.out.println(new Gson().toJson(listNode));
 //        ListNode listNode1 = s.revList2(l1);
@@ -27,8 +26,8 @@ public class Day3 {
 //        System.out.println(new Gson().toJson(listNode));
 //        int i = s.removeElement(new int[]{1, 2, 2, 2, 3, 3, 4}, 2);
 //        System.out.println(i);
-        int i = s.strStr("hello", "ll");
-        System.out.println(i);
+//        int i = s.strStr("hello", "ll");
+//        System.out.println(i);
     }
 }
 
@@ -57,9 +56,31 @@ class Solution3 {
         fuc(chars, left, right + 1, d + 1);
     }
 
-    public ListNode mergeKLists(ListNode[] lists) {
+    public ListNode mergeKLists2(ListNode[] lists) {
         if (lists.length == 0) return null;
         return mergeSort(lists, 0, lists.length - 1);
+    }
+
+    public ListNode mergeKLists(ListNode[] lists){
+        Queue<ListNode> queue= new PriorityQueue<>(lists.length, new Comparator<ListNode>() {
+            @Override
+            public int compare(ListNode o1, ListNode o2) {
+                if (o1.val < o2.val) return -1;
+                else if (o1.val == o2.val) return 0;
+                else return 1;
+            }
+        });
+        ListNode head = new ListNode(0);
+        ListNode p = head;
+        for (ListNode list : lists) {
+            if (list != null) queue.add(list);
+        }
+        while (queue.size() > 0){
+            p.next = queue.poll();
+            p = p.next;
+            if (p.next != null) queue.add(p.next);
+        }
+        return head.next;
     }
 
     public ListNode mergeSort(ListNode[] lists, int left, int right){
