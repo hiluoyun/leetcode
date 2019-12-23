@@ -1,7 +1,7 @@
 public class Common {
 }
 
-class ListNode {
+class   ListNode {
      int val;
      ListNode next;
      ListNode(int x) { val = x; }
