@@ -22,10 +22,14 @@ public class Day5 {
 //        System.out.println(Integer.MAX_VALUE);
 //        List<List<String>> lists = s.groupAnagrams(new String[]{"boo", "bob", "obb", "", ""});
 //        System.out.println(new Gson().toJson(lists));
-        String multiply = s.multiply("9133", "12333333333334");
+//        String multiply = s.multiply("123", "456");
 //        String s1 = s.addString("4565", "5");
-        System.out.println(multiply);
+//        System.out.println(multiply);
 
+//        int trap = s.trap(new int[]{2,1,0,2});
+//        System.out.println(trap);
+        int jump = s.jump(new int[]{5,6,4,4,6,9,4,4,7,4,4,8,2,6,8,1,5,9,6,5,2,7,9,7,9,6,9,4,1,6,8,8,4,4,2,0,3,8,5});
+        System.out.println(jump);
 
 
         System.out.println("TIME: " + (System.currentTimeMillis() - now) + " ms");
@@ -193,16 +197,17 @@ class Solution5 {
     }
 
     public String multiply(String num1, String num2) {
+        if ("0".equals(num1) || "0".equals(num2)) return "0";
         int len1 = num1.length();
         int len2 = num2.length();
         StringBuilder[] sb = new StringBuilder[len1];
+        StringBuilder suffix = new StringBuilder();
         for (int i = len1 - 1; i >= 0; i--) {
             char ch = num1.charAt(i);
             int step = 0;
             sb[i] = new StringBuilder();
-            for (int j = i; j < len1 - 1; j++) {
-                sb[i].append("0");
-            }
+            if (i < len1 - 1) suffix.append("0");
+            sb[i].append(suffix);
             for (int j = len2 - 1; j >= 0; j--) {
                 int t = (ch - '0') * (num2.charAt(j) - '0') + step;
                 step = t / 10;
@@ -213,8 +218,7 @@ class Solution5 {
         }
 
         StringBuilder merge = merge(sb, 0, len1 - 1);
-        String s = merge.toString().replaceAll("^(0+)", "");
-        return s.equals("") ? "0" : s;
+        return merge.toString();
     }
 
     public StringBuilder merge(StringBuilder[] lists, int left, int right){
@@ -249,5 +253,83 @@ class Solution5 {
         }
         res.insert(0, prefix);
         return res;
+    }
+
+    public int trap(int[] height) {
+        int length = height.length;
+        if (length < 3) return 0;
+        int t = 0;
+        int res = 0;
+        int i = 0, j = 1;
+        for (; j < length; j++) {
+            if (j - i  <= 1){
+                if (height[j] > height[i]) {
+                    i = j;
+                }else {
+                    t += height[j];
+                }
+            }else {
+                if (height[j] < height[i]){
+                    t += height[j];
+                }else{
+                    res += (j - i - 1) * height[i] - t;
+                    t = 0;
+                    i = j;
+                }
+            }
+        }
+
+        t = 0;
+        for (int k = length - 1, h = k - 1; h >= i; h--) {
+            if (k - h  <= 1){
+                if (height[h] > height[k]) {
+                    k = h;
+                }else {
+                    t += height[h];
+                }
+            }else {
+                if (height[h] < height[k]){
+                    t += height[h];
+                }else{
+                    res += (k - h - 1) * height[k] - t;
+                    t = 0;
+                    k = h;
+                }
+            }
+        }
+        return res;
+    }
+
+    private static int jumpLen = 0;
+    private static int jumpRes = 0;
+    public int jump(int[] nums) {
+        if (nums.length <= 1) return 0;
+        jumpLen = nums.length;
+        jumpRes = nums.length - 1;
+        dfs(nums, 0, 0);
+
+        return jumpRes;
+    }
+
+    private void dfs(int[] nums, int res, int m){
+        if (m == jumpLen - 1){
+            jumpRes = res;
+            return;
+        }
+        if (m + nums[m] >= jumpLen - 1) {
+            jumpRes = res + 1;
+            return;
+        }
+        int t = m + nums[m] + nums[m + nums[m]];
+        int index = nums[m];
+        for (int i = nums[m] - 1; i > 0; i--) {
+            if (t >= jumpLen - 1) break;
+            int tmp = m + i + nums[m + i];
+            if (tmp > t){
+                t = tmp;
+                index = i;
+            }
+        }
+        dfs(nums, res + 1, m + index);
     }
 }
