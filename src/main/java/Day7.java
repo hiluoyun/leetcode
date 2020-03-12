@@ -121,4 +121,23 @@ class Solution7 {
         }
         search(m, n + 1, count);
     }
+
+
+    public int lengthOfLastWord(String s) {
+        s = " " + s;
+        int max = 0;
+        int length = s.length();
+        int c = 0;
+        for (int i = length - 1; i >= 0; i--) {
+            if (s.charAt(i) != ' '){
+                c += 1;
+            }else {
+                if (c != 0){
+                    max = c;
+                    break;
+                }
+            }
+        }
+        return max;
+    }
 }
